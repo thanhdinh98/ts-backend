@@ -1,4 +1,6 @@
-import NewSingleton from "./singleton";
+import {
+  NewSingleton,
+} from "./singleton";
 
 export default {
   NewSingleton,

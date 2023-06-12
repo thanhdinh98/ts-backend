@@ -1,32 +1,36 @@
 import { Mutex } from "async-mutex";
 
-export type Singleton<Type> = {
+type Singleton<Type> = {
   isLoaded: boolean
   mutex: Mutex
   instance?: Type
   loader: ()=>Type
+
+  Get: ()=>Promise<Type | undefined>
 };
 
-export async function Get<Type>(singleton: Singleton<Type>): Promise<Type | undefined> {
-  if (singleton.isLoaded) {
-    return singleton.instance;
-  }
-  const release = await singleton.mutex.acquire();
-  try {
-    singleton.instance = singleton.loader();
-    singleton.isLoaded = true;
-  } catch (err) {
-    Promise.reject(err);
-  } finally {
-    release();
-  }
-  return singleton.instance;
-}
-
-export default function NewSingleton<Type>(loader: ()=>Type): Singleton<Type> {
-  return {
+export function NewSingleton<Type>(loader: ()=>Type): Singleton<Type> {
+  const newSingleton: Singleton<Type> = {
     mutex: new Mutex(),
     loader,
     isLoaded: false,
+
+    Get: () => Promise.resolve(undefined),
   };
+  newSingleton.Get = async () => {
+    if (newSingleton.isLoaded) {
+      return newSingleton.instance;
+    }
+    const release = await newSingleton.mutex.acquire();
+    try {
+      newSingleton.instance = newSingleton.loader();
+      newSingleton.isLoaded = true;
+    } catch (err) {
+      Promise.reject(err);
+    } finally {
+      release();
+    }
+    return newSingleton.instance;
+  };
+  return newSingleton;
 }
