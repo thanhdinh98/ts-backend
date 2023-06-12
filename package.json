@@ -11,9 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async-mutex": "^0.4.0",
     "commander": "^10.0.1",
     "dotenv": "^16.1.4",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "pg": "^8.11.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.32.0"
   },
   "devDependencies": {
     "@types/commander": "^2.12.2",

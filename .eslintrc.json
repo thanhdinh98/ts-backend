@@ -18,7 +18,9 @@
               "avoidEscape": true,
               "allowTemplateLiterals": true
             }
-        ]
+        ],
+        "no-param-reassign": "off",
+        "import/extensions": "off"
     },
     "ignorePatterns": ["webpack.config.js"]
 }
