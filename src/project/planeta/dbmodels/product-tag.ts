@@ -1,12 +1,13 @@
 import {
   DataTypes, Model, ModelStatic,
 } from "sequelize";
-import GetConnection from "@/database/connection";
-import comtypes from "@/common/comtypes";
 
-const vProductDefineSinlgeton = comtypes.NewSingleton(async () => {
+import comtypes from "../../../common/comtypes";
+import GetConnection from "../../../database/connection";
+
+const vProductTagDefineSinlgeton = comtypes.NewSingleton(async () => {
   const connection = await GetConnection();
-  return connection?.define<ProductAttribute>("Product", {
+  return connection?.define<ProductTagAttribute>("Product", {
     Id: {
       type: DataTypes.BIGINT,
       primaryKey: true,
@@ -14,9 +15,6 @@ const vProductDefineSinlgeton = comtypes.NewSingleton(async () => {
     },
     Name: DataTypes.JSONB,
     Slug: DataTypes.STRING,
-    Tags: DataTypes.ARRAY(DataTypes.STRING),
-    Description: DataTypes.JSONB,
-    Options: DataTypes.JSONB,
     CreateTime: DataTypes.BIGINT,
     UpdateTime: DataTypes.BIGINT,
     DeleteTime: DataTypes.BIGINT,
@@ -30,38 +28,24 @@ const vProductDefineSinlgeton = comtypes.NewSingleton(async () => {
   });
 });
 
-type Option = {
-  [key: string]: {
-    AdditionPrice: number
-    Value: string
-  }[]
-};
-
-type LocaleString = {
-  [locale: string]: string
-};
-
-class ProductAttribute extends Model {
+export class ProductTagAttribute extends Model {
   Id!: number;
-  Name!: LocaleString;
+  Name!: string;
   Slug!: string;
-  Tags!: string[];
-  Description!: LocaleString;
-  Options!: Option[];
   CreateTime!: number;
   UpdateTime!: number;
   DeleteTime!: number;
 }
 
 type ProductGetter = {
-  productAction: ModelStatic<ProductAttribute> | undefined
-  newProduct: ProductAttribute | undefined
+  productTagAction: ModelStatic<ProductTagAttribute> | undefined
+  newTagProduct: ProductTagAttribute | undefined
 };
 
 export default async function Product(): Promise<ProductGetter> {
-  const product = await vProductDefineSinlgeton.Get();
+  const product = await vProductTagDefineSinlgeton.Get();
   return {
-    productAction: product,
-    newProduct: product?.build(),
+    productTagAction: product,
+    newTagProduct: product?.build(),
   };
 }

@@ -1,10 +1,9 @@
 import {
-  Express, Router,
+  Express,
 } from "express";
 
-export default function InitRouteV1(app: Express) {
-  const productRouter = Router();
-  productRouter.post("/list/");
+import productApi from "./product_api";
 
-  app.use("/product", productRouter);
+export default function InitRouteV1(app: Express) {
+  app.post("/list/", productApi.ProductList);
 }

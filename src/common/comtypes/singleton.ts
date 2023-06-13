@@ -10,27 +10,25 @@ type Singleton<Type> = {
 };
 
 export function NewSingleton<Type>(loader: ()=>Type): Singleton<Type> {
-  const newSingleton: Singleton<Type> = {
+  return {
     mutex: new Mutex(),
     loader,
     isLoaded: false,
 
-    Get: () => Promise.resolve(undefined),
+    async Get() {
+      if (this.isLoaded) {
+        return this.instance;
+      }
+      const release = await this.mutex.acquire();
+      try {
+        this.instance = this.loader();
+        this.isLoaded = true;
+      } catch (err) {
+        Promise.reject(err);
+      } finally {
+        release();
+      }
+      return this.instance;
+    },
   };
-  newSingleton.Get = async () => {
-    if (newSingleton.isLoaded) {
-      return newSingleton.instance;
-    }
-    const release = await newSingleton.mutex.acquire();
-    try {
-      newSingleton.instance = newSingleton.loader();
-      newSingleton.isLoaded = true;
-    } catch (err) {
-      Promise.reject(err);
-    } finally {
-      release();
-    }
-    return newSingleton.instance;
-  };
-  return newSingleton;
 }

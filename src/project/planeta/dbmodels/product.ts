@@ -1,8 +1,8 @@
 import {
   DataTypes, Model, ModelStatic,
 } from "sequelize";
-import GetConnection from "@/database/connection";
-import comtypes from "@/common/comtypes";
+import GetConnection from "../../../database/connection";
+import comtypes from "../../../common/comtypes";
 
 const vProductDefineSinlgeton = comtypes.NewSingleton(async () => {
   const connection = await GetConnection();
@@ -41,7 +41,7 @@ type LocaleString = {
   [locale: string]: string
 };
 
-class ProductAttribute extends Model {
+export class ProductAttribute extends Model {
   Id!: number;
   Name!: LocaleString;
   Slug!: string;

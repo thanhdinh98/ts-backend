@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
+    "dev": "npm run build && node -r source-map-support/register build/main.js",
     "start": "node dist/main.js"
   },
   "keywords": [],

@@ -1,7 +1,6 @@
 import { Sequelize } from "sequelize";
-
-import comtypes from "@/common/comtypes";
-import connclose from "@/connclose";
+import comtypes from "../common/comtypes";
+import connclose from "../connclose";
 
 const vDbConnection = comtypes.NewSingleton(() => {
   const sequelize = new Sequelize();

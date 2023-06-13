@@ -1,8 +1,8 @@
 import {
   DataTypes, Model, ModelStatic,
 } from "sequelize";
-import GetConnection from "@/database/connection";
-import comtypes from "@/common/comtypes";
+import GetConnection from "../../../database/connection";
+import comtypes from "../../../common/comtypes";
 
 const vBlockUserDefineSinlgeton = comtypes.NewSingleton(async () => {
   const connection = await GetConnection();
@@ -28,7 +28,7 @@ const vBlockUserDefineSinlgeton = comtypes.NewSingleton(async () => {
   });
 });
 
-class BlockUserAttribute extends Model {
+export class BlockUserAttribute extends Model {
   Id!: number;
   Ip!: string;
   Country!: string;
