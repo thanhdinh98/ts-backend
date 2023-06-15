@@ -24,14 +24,14 @@ export async function GetListProduct(): Promise<ProductModel[] | Error> {
   }
 }
 
-export async function GetProductDetail(productID: number) : Promise<ProductModel | Error> {
+export async function GetProductDetailBySlug(slug:string) : Promise<ProductModel | Error> {
   try {
     const {
       productAction,
     } = await dbmodels.Product();
     const product = await productAction?.findOne({
       where: {
-        id: productID,
+        id: slug,
       },
     });
     if (typeof product === "undefined") {

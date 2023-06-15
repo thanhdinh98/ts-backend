@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import _helper from "./0_helper";
 import comutils from "../../../../../common/comutils";
 import productmod from "../../../lib/productmod";
 import { ProductAttribute } from "../../../dbmodels/product";
+import { ProductTagAttribute } from "../../../dbmodels/product-tag";
 
 type ProductListRequest = {
   paging: {
@@ -28,19 +29,20 @@ type ProductListResponse = {
   }
 };
 
-async function ProductList(req: Request, res: Response): Promise<Error | any> {
-  let reqModel = _helper.LoadRequestBody<ProductListRequest>(req.body, {
+async function ProductList(req: Request, res: Response, next: NextFunction) {
+  const reqModel = _helper.LoadRequestBody<ProductListRequest>(req.body, {
   });
   if (comutils.IsError(reqModel)) {
-    return <Error>reqModel;
+    next(<Error>reqModel);
+    return;
   }
-  reqModel = <ProductListRequest>reqModel;
   let products = await productmod.GetListProduct();
   if (comutils.IsError(products)) {
-    return <Error>products;
+    next(<Error>products);
+    return;
   }
   products = <ProductAttribute[]>products;
-  const resModel:ProductListResponse = {
+  _helper.SendJSON<ProductListResponse>(res, {
     products: products.map((product) => ({
       name: product.Name,
       description: product.Description,
@@ -54,10 +56,74 @@ async function ProductList(req: Request, res: Response): Promise<Error | any> {
       offset: 1,
       total: 1,
     },
-  };
-  return res.json(resModel);
+  });
+}
+
+type ProductGetRequest = {
+  slug: string
+};
+
+type ProductGetResponse = {
+  product: {
+    name: any,
+    description: any
+    slug: string
+    tags: string[]
+    options: any,
+    create_time: number
+  }
+};
+
+async function ProductGet(req: Request, res: Response, next: NextFunction) {
+  const reqModel = _helper.LoadRequestBody<ProductGetRequest>(req.body, {
+  });
+  if (comutils.IsError(reqModel)) {
+    next(<Error>reqModel);
+    return;
+  }
+  let product = await productmod.GetProductDetailBySlug((<ProductGetRequest>reqModel).slug);
+  if (comutils.IsError(product)) {
+    next(<Error>product);
+  }
+  product = <ProductAttribute>product;
+  _helper.SendJSON<ProductGetResponse>(res, {
+    product: {
+      name: product.Name,
+      description: product.Description,
+      slug: product.Slug,
+      tags: product.Tags,
+      options: product.Options,
+      create_time: product.CreateTime,
+    },
+  });
+}
+
+type ProductTagListResponse = {
+  product_tags: {
+    name: string
+    slug: string
+    create_time: number
+  }[]
+};
+
+async function ProductTagList(req: Request, res: Response, next: NextFunction) {
+  let productTags = await productmod.GetProductTags();
+  if (comutils.IsError(productTags)) {
+    next(<Error>productTags);
+    return;
+  }
+  productTags = <ProductTagAttribute[]>productTags;
+  _helper.SendJSON<ProductTagListResponse>(res, {
+    product_tags: productTags.map((productTag) => ({
+      name: productTag.Name,
+      slug: productTag.Slug,
+      create_time: productTag.CreateTime,
+    })),
+  });
 }
 
 export default {
+  ProductGet,
   ProductList,
+  ProductTagList,
 };

@@ -23,7 +23,6 @@ const vProductDefineSinlgeton = comtypes.NewSingleton(async () => {
   }, {
     tableName: "product",
     timestamps: true,
-    paranoid: true,
     updatedAt: "UpdateTime",
     createdAt: "CreateTime",
     deletedAt: "DeleteTime",

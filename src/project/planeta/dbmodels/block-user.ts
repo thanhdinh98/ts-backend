@@ -21,7 +21,6 @@ const vBlockUserDefineSinlgeton = comtypes.NewSingleton(async () => {
   }, {
     tableName: "block_user",
     timestamps: true,
-    paranoid: true,
     updatedAt: "UpdateTime",
     createdAt: "CreateTime",
     deletedAt: "DeleteTime",

@@ -1,4 +1,5 @@
 import Validator, { ValidationError } from "fastest-validator";
+import { Response } from "express";
 import comerr from "../../../../../common/comerr";
 import errors from "../../../../../common/comerr/errors";
 
@@ -20,6 +21,12 @@ function LoadRequestBody<T>(reqBody: any, validateSchema: any): T | Error {
   return <T>JSON.parse(JSON.stringify(reqBody));
 }
 
+function SendJSON<T>(res: Response, resModel: T) {
+  res.status(200);
+  res.json(resModel);
+}
+
 export default {
   LoadRequestBody,
+  SendJSON,
 };

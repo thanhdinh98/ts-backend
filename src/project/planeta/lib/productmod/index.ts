@@ -1,11 +1,11 @@
 import {
   GetListProduct,
-  GetProductDetail,
+  GetProductDetailBySlug,
   GetProductTags,
 } from "./manager";
 
 export default {
   GetListProduct,
   GetProductTags,
-  GetProductDetail,
+  GetProductDetailBySlug,
 };
